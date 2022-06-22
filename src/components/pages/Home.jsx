@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux'
 import { setIsDeleted, setIsEditButtonClicked, setIsSaved } from '../../features/dataSlice'
 import { TOKEN } from '../../app/constants'
 import { addTask, deleteTask, updateTask } from '../../actions/dataActions'
+import { setOnError } from '../../features/authSlice'
 
 const Home = () => {
 
@@ -41,14 +42,20 @@ const Home = () => {
     const taskDate = startDate.getFullYear() + "-" + month + "-" + day;
     const timeZone = Math.abs(new Date(startDate).getTimezoneOffset() * 60)
     const taskTime = hour + minutes
-
-
+    
+    
     const [showModal, setShowModal] = useState(false);
-
+    
     const hideModal = () => setShowModal(false)
+    
+    const closeModal = () => {
+        setShowModal(false)
+        deleteTask(user.company_id, user.token, dispatch)
+    
+    }
 
     let modal;
-
+    
     if (onError !== '') {
         modal = (
             <ModalAction
@@ -56,12 +63,12 @@ const Home = () => {
                 // title='Error'
                 body={onError}
                 onHideHandler={hideModal}
-                onClickHandler={hideModal}
-                buttonText='Close'
+                onClickHandler={closeModal}
+                buttonText='Yes, Delete'
             />
         )
     }
-
+    
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -146,7 +153,8 @@ const Home = () => {
     }
 
     const onDelete = () => {
-        deleteTask(user.company_id, user.token, dispatch)
+        setShowModal(true)
+        dispatch(setOnError('You are about to delete task!'))
     }
 
     const onEditClickHandler = () => {

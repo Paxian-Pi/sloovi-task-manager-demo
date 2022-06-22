@@ -36,3 +36,75 @@
     transform: rotate(360deg);
   }
 }
+
+#float-label {
+  display: flex;
+  flex-direction: column;
+  min-width: 350px;
+  position: relative;
+}
+
+/* My CSS */
+
+#float-label input {
+  width: 100%;
+  height: 60px;
+  padding: 14px 16px 0 10px;
+  outline: 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+#float-label label {
+  font-size: 16px;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 0 12px;
+  color: #999;
+  pointer-events: none;
+  position: absolute;
+  transform: translate(0, 26px) scale(1);
+  transform-origin: top left;
+  transition: all 0.2s ease-out;
+}
+
+#float-label:focus-within label {
+  transform: translate(0, 8px) scale(0.75);
+}
+
+#float-label .Active {
+  transform: translate(0, 12px) scale(0.75);
+}
+
+.bg_custom1 {
+  background-color: #ffffff;
+}
+
+.bg_custom {
+  background-color: #edf7fc;
+}
+
+.btn_custom {
+  background-color: #edf7fc;
+}
+
+.btn_custom:hover {
+  background-color: #d0d1d1;
+  color: rgb(229, 226, 226);
+}
+
+.btn_custom1 {
+  background-color: #47bb7f;
+}
+
+.btn_custom1:hover {
+  background-color: #3ea36f;
+  color: #fff;
+}
+
+img {
+  width: 40px;
+  height: 40px;
+}

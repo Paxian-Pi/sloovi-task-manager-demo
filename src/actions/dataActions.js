@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { setOnError } from '../features/authSlice'
+import { setModalMessage } from '../features/authSlice'
 import { setIsDeleted, setIsSaved, setTask } from '../features/dataSlice'
 
 export const addTask = (taskData, companyId, token, dispatch) => {
@@ -13,7 +13,7 @@ export const addTask = (taskData, companyId, token, dispatch) => {
         })
         .then(res => {
             if (res.data.code === 403) {
-                dispatch(setOnError(res.data.message))
+                dispatch(setModalMessage(res.data.message))
                 return
             }
             // console.log(res.data)
@@ -42,9 +42,9 @@ export const updateTask = (taskData, companyId, taskId, token, dispatch) => {
         .catch(err => console.log(err))
 }
 
-export const deleteTask = (companyId, token, dispatch) => {
+export const deleteTask = (companyId, taskId, token, dispatch) => {
     axios
-        .delete(` https://stage.api.sloovi.com/task/lead_465c14d0e99e4972b6b21ffecf3dd691/<task_id>?company_id=${companyId}`, {
+        .delete(` https://stage.api.sloovi.com/task/lead_465c14d0e99e4972b6b21ffecf3dd691/${taskId}?company_id=${companyId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Accept': 'application/json',
@@ -52,9 +52,9 @@ export const deleteTask = (companyId, token, dispatch) => {
             }
         })
         .then(res => {
-            // console.log(res)
+            // console.log(res.data.results)
             dispatch(setIsDeleted(true))
-            // dispatch(setTask(res.results))
+            dispatch(setTask(res.data.results))
         })
         .catch(err => console.log(err))
 }

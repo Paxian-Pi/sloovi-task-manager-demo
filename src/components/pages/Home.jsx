@@ -11,12 +11,12 @@ import { useDispatch } from 'react-redux'
 import { setIsDeleted, setIsEditButtonClicked, setIsSaved } from '../../features/dataSlice'
 import { TOKEN } from '../../app/constants'
 import { addTask, deleteTask, updateTask } from '../../actions/dataActions'
-import { setOnError } from '../../features/authSlice'
+import { setModalMessage } from '../../features/authSlice'
 
 const Home = () => {
 
     const { isSaved, isEditButtonClicked, isDeleted, addedTask } = useSelector(state => state.data.value)
-    const { isAuthenticated, user, onError } = useSelector(state => state.auth.value)
+    const { isAuthenticated, user, modalMessage } = useSelector(state => state.auth.value)
 
     // console.log(addedTask.id)
     // console.log(addedTask.task_msg)
@@ -26,7 +26,6 @@ const Home = () => {
 
     const [taskMessage, setTaskMessage] = useState('')
     const [assignUser, setAssignUser] = useState('')
-    const [modalMessage, setModalMessage] = useState('')
     const [isAddTaskClicked, setIsAddTaskClicked] = useState(false)
 
     const [startDate, setStartDate] = useState(new Date());
@@ -40,39 +39,40 @@ const Home = () => {
     day = (day < 10 ? "0" : "") + day;
 
     const taskDate = startDate.getFullYear() + "-" + month + "-" + day;
+
     const timeZone = Math.abs(new Date(startDate).getTimezoneOffset() * 60)
+
     const taskTime = hour + minutes
-    
-    
+
     const [showModal, setShowModal] = useState(false);
-    
-    const hideModal = () => setShowModal(false)
-    
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const hideModal = () => {
+        setShowModal(false)
+        dispatch(setModalMessage(''))
+    }
+
     const closeModal = () => {
         setShowModal(false)
-        deleteTask(user.company_id, user.token, dispatch)
-    
+        deleteTask(user.company_id, addedTask.id, user.token, dispatch)
     }
 
     let modal;
     
-    if (onError !== '') {
+    if (modalMessage !== '') {
         modal = (
             <ModalAction
                 show={showModal}
                 // title='Error'
-                body={onError}
+                body={modalMessage}
                 onHideHandler={hideModal}
                 onClickHandler={closeModal}
                 buttonText='Yes, Delete'
             />
         )
     }
-    
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-
-
 
     const onAddTaskHandler = () => {
         setIsAddTaskClicked(true)
@@ -88,7 +88,7 @@ const Home = () => {
         }
         dispatch(setIsEditButtonClicked(false))
         dispatch(setIsSaved(false))
-    
+
     }
 
     const onCancelHandler = () => {
@@ -138,7 +138,7 @@ const Home = () => {
         setIsAddTaskClicked(false)
         dispatch(setIsSaved(true))
         dispatch(setIsDeleted(false))
-        
+
         const taskData = {
             assigned_user: user.user_id,
             task_date: taskDate,
@@ -151,10 +151,10 @@ const Home = () => {
         updateTask(taskData, user.company_id, addedTask.id, user.token, dispatch)
 
     }
-
+    
     const onDelete = () => {
         setShowModal(true)
-        dispatch(setOnError('You are about to delete task!'))
+        dispatch(setModalMessage('You are about to delete this task!'))
     }
 
     const onEditClickHandler = () => {

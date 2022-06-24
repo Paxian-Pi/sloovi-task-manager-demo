@@ -1,4 +1,3 @@
-import axios from 'axios'
 import React from 'react'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
@@ -7,13 +6,13 @@ import FloatingLabelTextInput from '../../common/FloatingLabelTextInput'
 import { useDispatch } from 'react-redux'
 import { login } from '../../actions/authActions'
 import { useSelector } from 'react-redux'
-import { setOnError } from '../../features/authSlice'
+import { setModalMessage } from '../../features/authSlice'
 import { useNavigate } from 'react-router-dom'
 
 
 const Login = () => {
 
-    const { onError } = useSelector(state => state.auth.value)
+    const { modalMessage } = useSelector(state => state.auth.value)
 
     const [onLogin, setOnLogin] = useState(false)
 
@@ -28,11 +27,11 @@ const Login = () => {
         setShowModal(true)
 
         if (email === '' || password === '') {
-            dispatch(setOnError('Empty field detected!'))
+            dispatch(setModalMessage('Empty field detected!'))
             return
         }
 
-        dispatch(setOnError(''))
+        dispatch(setModalMessage(''))
         setOnLogin(true)
 
         const userData = {
@@ -46,7 +45,7 @@ const Login = () => {
     const LoginButton = () => {
         return (
             <div>
-                {onLogin && onError === ''
+                {onLogin && modalMessage === ''
                     ?
                     <button className="btn btn-dark bg-transparent btn-block mt-4 mb-5 text-dark">
                         Logging in...
@@ -65,13 +64,13 @@ const Login = () => {
     const hideModal = () => setShowModal(false)
 
     let modal;
-
-    if (onError !== '') {
+    
+    if (modalMessage !== '') {
         modal = (
             <ModalAction
                 show={showModal}
                 // title='Error'
-                body={onError}
+                body={modalMessage}
                 onHideHandler={hideModal}
                 onClickHandler={hideModal}
                 buttonText='Close'
@@ -81,7 +80,7 @@ const Login = () => {
 
     return (
         <motion.div
-            className='bg_logo bg_custom d-flex align-items-center justify-content-center'
+            className='bg_custom d-flex align-items-center justify-content-center'
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    onError: '',
+    modalMessage: '',
     isAuthenticated: false,
     user: {}
 }
@@ -10,8 +10,8 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState: { value: initialState },
     reducers: {
-        setOnError: (state, action) => {
-            state.value.onError = action.payload
+        setModalMessage: (state, action) => {
+            state.value.modalMessage = action.payload
         },
 
         setCurrentUser: (state, action) => {
@@ -21,6 +21,6 @@ export const authSlice = createSlice({
     }
 })
 
-export const { setCurrentUser, setOnError } = authSlice.actions
+export const { setCurrentUser, setModalMessage } = authSlice.actions
 
 export default authSlice.reducer
